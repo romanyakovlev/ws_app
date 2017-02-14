@@ -13,14 +13,11 @@ app.set('views', './views');
 
 wss.on('connection', function connection(ws) {
   var location = url.parse(ws.upgradeReq.url, true);
-  // You might use location.query.access_token to authenticate or share sessions
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
-	wss.clients.forEach(function (conn) {
-      conn.send(message);
-    });
+    if (location['path'] === '/') {
+        var status = router.sockets_route.sockets_index(message, wss);
+    }
   });
 });
 
